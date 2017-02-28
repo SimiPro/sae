@@ -69,12 +69,12 @@ class Edge {
 }
 
 class STGraph {
-    List<Edge> edges;
+    List<Edge> edges = new ArrayList<Edge>();
     Node source;
     Node target;
+    Map<Integer, List<Node>> pathCache = new HashMap<>();
 
     STGraph(Node source, Node target) {
-    	edges = new ArrayList<Edge>();
         this.source = source;
         this.target = target;
     }
@@ -86,9 +86,18 @@ class STGraph {
 
     void addEdge(Edge e) {
         edges.add(e);
+        pathCache.clear();
     }
-
+    
     List<Node> shortestPath() {
+    	
+    	// first check cache
+    	int key = this.source.hashCode() + this.target.hashCode();
+    	if (pathCache.containsKey(key)) {
+    		return pathCache.get(key);
+    	}
+    	
+    	// then calculate shortest path
         PriorityQueue<Node> minNode = new PriorityQueue<>(10, (o1, o2) -> new Integer(o1.distanceToRoot).compareTo(o2.distanceToRoot));
         source.distanceToRoot = 0;
 
@@ -123,7 +132,8 @@ class STGraph {
 
         List<Node> shortestPath = new ArrayList<Node>();
         stack.forEach(shortestPath::add);
-
+        pathCache.put(key, shortestPath);
+        	
         return shortestPath;
     }
 

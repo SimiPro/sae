@@ -1,0 +1,56 @@
+1.  - If we know in advance the source and target. 
+	- If the source and target has some special meaning
+	- If we want to cache the shortest path for a fixed source and target. (Look implementation)
+	- if we call shortest path multiple times with the same arguments. 
+	(Like a navi who caches the favorites routes and just checks for traffic on start)
+	- but we obvsly could also cache if we directly input the arguments for the shortest path as arguments
+	for the shortest path method!
+	
+2. No if we don't have a connection between source and target node there won't be a shortest path. 
+In the client docu we focus on "How to use the code". Therefore with respect to the return value we say the
+following: "the shortest path method returns a list containing the nodes of the shortest path beginning with 
+the source node and ending with the target node. Null is returned if no path exists between source and target. 
+
+3. 
+	a) As in 1. shortly sketched before we calculate the shortest path we check if we already calculated the 
+	requested source -> target path. And return it from the cache if we have. Note that we have to clear the cache
+	when new edges are added to the path. @See the implementation below. 
+	
+	b) Because we concentrate on "hot to use it" we don't say anything here.
+	(It could be mentioned that if we edges are added the cache is cleared)  
+	
+	c)   
+		I would propose multiple contracts: 
+		Node: 
+			Invariant: distanceToRoot >= 0. 
+		Edge: 
+			Invariant: Node From, Node To != Null
+			Invariant: int distance >= 0
+			
+		StGraph: 
+			Invariant: edges, source, target != Null
+			Preconditions: 
+				StGraph - constructor : source, target != Null
+				setST : source, target != Null
+				addEdge: edge != Null
+			
+			Postconditions: 
+				addEdge: cache size = 0
+				
+	d) Yes there are many other designs possible. Let me sketch a few: 
+		1. As briefly mentioned above we could have 1 method which takes source, target Node and 
+			vertice matrix. (As we learned in datastructures & algos).
+		
+		2. Instead of having a List of edges we could connect the edges under one another: 
+		class Node {
+			List<Node> to;
+		
+		}
+		
+		3. We could keep the layot at it is and just remove the setST and remove the Constructor and 
+		input the source and target over arguments
+		
+		 
+			
+				 
+			
